@@ -1,0 +1,215 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
+          integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk"
+          crossorigin="anonymous" />
+    <style>
+        .timer-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .timer {
+            font-size: 60px;
+            margin-bottom: 10px;
+            transition: all 1s;
+        }
+
+        .timer-form__Btn {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            text-align: center;
+            padding-bottom: 25px;
+        }
+
+        .timerBtn {
+            height: 30px;
+            width: 100px;
+            border-radius: 25px;
+            margin-left: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+            .timerBtn i {
+                font-size: 22px;
+                transition: all 0.2s ease-in-out;
+                cursor: pointer;
+            }
+
+                .timerBtn i:active,
+                .timerBtn i:hover {
+                    font-size: 30px;
+                }
+
+        .start {
+            margin: 50px;
+            bottom: 30px;
+            font-size: 100px;
+            margin: 0px;
+            padding: 0px;
+        }
+
+            .start + div > .timerBtn:nth-child(1) {
+                display: none;
+            }
+    </style>
+    <title>김정환의 콜수 카운터 프로그램</title>
+    <script>
+        var counterVal = 0; //전역변수
+        var counterSet = 0; //전역변수
+
+        function incrementClick() {
+            updateDisplay(++counterVal);
+            if ((counterVal % 15 == 0 && counterVal != 0)) {
+
+                setCounter(++counterSet);
+            }
+        }
+
+        function decreasementClick() {
+            if (counterVal >= 0)
+                updateDisplay(--counterVal);
+            if ((counterVal % 15 == 0 && counterSet > 0) && counterVal > 0)
+                setCounter(--counterSet);
+        }
+
+        function resetCounter() {
+            counterVal = 0;
+            counterSet = 0;
+            updateDisplay(counterVal);
+            setCounter(counterSet);
+        }
+
+        function updateDisplay(val) {
+            if (counterVal >= 0)
+                document.getElementById("counter-label").innerHTML = val;
+        }
+        function setCounter(val) {
+            if (counterVal % 15 == 0) {
+                if (counterSet < 0)
+                    counterSet = 0;
+                document.getElementById("setCounter-label").innerHTML = val;
+            }
+        }
+        var nStart = new Date().getTime();      //시작시간 체크(단위 ms)
+
+    </script>
+</head>
+<body>
+    <h3><center>[ver1.0]김정환[콜10팀]의 콜수 카운터 프로그램</center></h3>
+    <div>
+        <center><h2>콜수 : <span id="counter-label" style="font-weight:bold">0</span></h2></center>
+        <center>=======================================</center>
+        <center>셋트 : <span id="setCounter-label" style="font-weight:bold">0</span><br /><span>15개씩 1세트</span></center>
+    </div>
+    <center>
+        <div>
+            <center>=======================================</center>
+            <button onclick="incrementClick()">+1콜</button>
+            <button onclick="decreasementClick()">-1콜</button>
+            <br /><br />
+            <button onclick="resetCounter()">콜수 Reset</button>
+        </div>
+        <center>=======================================</center>
+        <center><span id="clock" style="color:black;">clock</span></center>
+        <center>=======================================</center>
+        <h1>휴식시간 체크 하기</h1>
+        <div class="timer-box">
+            <div class="timer js-timer">00:00:00</div>
+            <div class="timer-form__Btn">
+                <div class="timerBtn js-timer__startBtn">
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="timerBtn js-timer__stopBtn">
+                    <i class="fas fa-pause"></i>
+                </div>
+                <div class="timerBtn js-timer__resetBtn">
+                    <i class="fas fa-stop"></i>
+                </div>
+            </div>
+        </div>
+        <script>
+            var Target = document.getElementById("clock");
+            function clock() {
+                var time = new Date();
+
+                var month = time.getMonth();
+                var date = time.getDate();
+                var day = time.getDay();
+                var week = ['일', '월', '화', '수', '목', '금', '토'];
+
+                var hours = time.getHours();
+                var minutes = time.getMinutes();
+                var seconds = time.getSeconds();
+
+                Target.innerText =
+                    "현재 시각 : " +
+                    `${month + 1}월 ${date}일 ${week[day]}요일 ` +
+                    `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
+
+            }
+            clock();
+            setInterval(clock, 1000); // 1초마다 실행
+        </script>
+        <script>
+            const timer = document.querySelector('.js-timer'),
+                stopBtn = document.querySelector('.js-timer__stopBtn'),
+                startBtn = document.querySelector('.js-timer__startBtn'),
+                resetBtn = document.querySelector('.js-timer__resetBtn');
+
+            let TIME = 0;
+            let cron;
+
+            function startButton() {
+                updateTimer();
+                stopButton();
+                cron = setInterval(updateTimer, 1000);
+                timer.classList.add('start');
+            }
+
+            function stopButton() {
+                clearInterval(cron);
+                timer.classList.remove('start');
+            }
+
+            function resetButton() {
+                timer.innerText = `00:00:00`;
+                stopButton();
+                timer.classList.remove('start');
+                return (TIME = 0);
+            }
+
+            function updateTimer() {
+                const hours = Math.floor(TIME / 3600);
+                const checkMinutes = Math.floor(TIME / 60);
+                const seconds = TIME % 60;
+                const minutes = checkMinutes % 60;
+
+                timer.innerText = `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes
+                    }:${seconds < 10 ? `0${seconds}` : seconds} `;
+                TIME++;
+                console.log(TIME - 1);
+            }
+
+            function init() {
+                startBtn.addEventListener('click', startButton);
+                stopBtn.addEventListener('click', stopButton);
+                resetBtn.addEventListener('click', resetButton);
+            }
+            init();
+        </script>
+    </center>
+</body>
+</html>
